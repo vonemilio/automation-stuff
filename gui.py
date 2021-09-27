@@ -1,6 +1,9 @@
 import tkinter as tk
+from threading import Thread
 
-from clicker import ButtonController
+from pynput.keyboard import Listener, KeyCode
+
+from clicker import ButtonController, start_stop_key, exit_key
 
 START_STOP_KEY = '`'
 EXIT_KEY = ']'
@@ -11,13 +14,22 @@ greeting.pack()
 
 bc = ButtonController(window)
 
-button = tk.Button(
-    text="Start/Stop",
+button_start = tk.Button(
+    text="Start",
     width=25,
     height=5,
     bg="blue",
     fg="yellow",
-    command=bc.start_stop,
+    command=bc.toggle_on,
+)
+
+button_stop = tk.Button(
+    text="Stop",
+    width=25,
+    height=5,
+    bg="blue",
+    fg="yellow",
+    command=bc.toggle_off,
 )
 
 button_exit = tk.Button(
@@ -29,16 +41,23 @@ button_exit = tk.Button(
     command=bc.exit,
 )
 
-button.pack()
+button_start.pack()
+button_stop.pack()
 button_exit.pack()
 
-def handle_key_press(event):
-    if (event.char == EXIT_KEY):
-        print('Exiting, caught \']\'')
-        bc.exit()
-    if (event.char == START_STOP_KEY):
-        print('Caught start key')
-        bc.start_stop()
+click_thread = bc.click_thread
 
-window.bind('<KeyRelease>', handle_key_press)
+def on_press(key):
+    if key == start_stop_key:
+        if click_thread.running:
+            click_thread.stop_clicking()
+        else:
+            click_thread.start_clicking()
+    elif key == exit_key:
+        click_thread.exit()
+        listener.stop()
+
+listener = Listener(on_press=on_press)
+listener.start()
+
 window.mainloop()

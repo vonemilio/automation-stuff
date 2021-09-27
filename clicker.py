@@ -8,7 +8,7 @@ from pynput.keyboard import Listener, KeyCode
 
 #delay = 0.001
 delay = 0.001
-button = Button.right
+button = Button.left
 start_stop_key = KeyCode(char='`')
 exit_key = KeyCode(char=']')
 
@@ -52,14 +52,16 @@ class ButtonController:
         self.click_thread = ClickMouse(mouse, generate_random_range, button)
         self.click_thread.start()
 
-    def start_stop(self):
-        if self.click_thread.running:
-            self.click_thread.stop_clicking()
-            print('Stopping clicker')
-        else:
+    def toggle_on(self):
+        if not self.click_thread.running:
             self.click_thread.start_clicking()
             print('Starting clicker')
-    
+
+    def toggle_off(self):
+        if self.click_thread.running:
+            print('Stopping clicker')
+            self.click_thread.stop_clicking()   
+
     def exit(self):
         self.click_thread.exit()
         self.window.quit()
