@@ -1,4 +1,5 @@
 import pynput
+import random
 
 import time
 import threading
@@ -11,6 +12,8 @@ button = Button.right
 start_stop_key = KeyCode(char='`')
 exit_key = KeyCode(char=']')
 
+def generate_random_range():
+    return random.uniform(0.001, 0.003)
 
 class ClickMouse(threading.Thread):
     def __init__(self, delay, button):
@@ -34,11 +37,11 @@ class ClickMouse(threading.Thread):
         while self.program_running:
             while self.running:
                 mouse.click(self.button)
-                time.sleep(self.delay)
+                time.sleep(self.delay())
             time.sleep(0.1)
 
 mouse = Controller()
-click_thread = ClickMouse(delay, button)
+click_thread = ClickMouse(generate_random_range, button)
 click_thread.start()
 
 def on_press(key):
