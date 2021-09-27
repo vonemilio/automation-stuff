@@ -8,12 +8,12 @@ from pynput.keyboard import Listener, KeyCode
 
 #delay = 0.001
 delay = 0.001
-button = Button.right
+button = Button.left
 start_stop_key = KeyCode(char='`')
-exit_key = KeyCode(char=']')
+exit_key = KeyCode(char='[')
 
 def generate_random_range():
-    return random.uniform(0.001, 0.003)
+    return random.uniform(0.001, 0.2)
 
 class ClickMouse(threading.Thread):
     def __init__(self, delay, button):
